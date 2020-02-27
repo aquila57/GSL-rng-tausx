@@ -110,7 +110,13 @@ Run the speed test.
 Make sure that the LD_LIBRARY_PATH variable in runspeed.sh is
 pointing to the correct address path.
 
-./runspeed.sh
+./runspeed.sh GSL_rng_name
+
+Examples:
+
+./runspeed.sh tausx
+
+./runspeed.sh taus2
 
 To de-install the speed test,
 
@@ -118,32 +124,12 @@ To de-install the speed test,
 
 ---------------------------------------------
 
-Speed test of tausx vs taus2.
+Speed test program.
 
-Program speed.c in this repository runs a speed test on tausx
-and taus2, to see which generator runs faster.
+Program speed.c in this repository runs a speed test on a
+GNU Scientific Library random number generator.  The program
+calculates the number of ticks spent performing 100 million
+get operations.
 
-After 100 million gets, the following times were calculated for
-tausx and taus2.
+Tausx runs about 15% slower than taus2.
 
-Generator           #Ticks
-
-tausx duration        178
-
-taus2 duration        158
-
-Tausx takes roughly 12% longer than taus2 to generate numbers
-in this test.
-
-In another test, the timings were much closer.
-
-Generator           #Ticks
-
-tausx duration        206
-
-taus2 duration        200
-
-The timings change from one run to the next, depending on what else
-is happening in the linux system.  The first test above is a more
-accurate representation of the relative differences between the
-two generators.

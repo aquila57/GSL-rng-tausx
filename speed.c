@@ -1,4 +1,4 @@
-/* speed.c - Speed test for tausx vs taus2  Version 0.1.0            */
+/* speed.c - Speed test for GSL generators  Version 0.1.0            */
 /* Copyright (C) 2020 aquila57 at github.com                         */
 
 /* This program is free software; you can redistribute it and/or     */
@@ -37,15 +37,17 @@ int main(void)
    int duration;               /* duration of test in ticks */
    struct tms t;               /* structure used by times() */
    gsl_rng *rng;               /* RNG structure (state) */
+   gsl_rng_type *typ;          /* RNG name */
+   /************************************************/
+   /* initialize the GSL random number generator   */
+   /************************************************/
+   gsl_rng_env_setup();
+   typ = (gsl_rng_type *) gsl_rng_default;
+   rng = (gsl_rng *) gsl_rng_alloc(typ);
+   /* set the initial seed to 1 [the default] */
+   gsl_rng_set(rng,1);
    /* print column headings */
-   printf("Generator           #Ticks\n");
-   /************************************************/
-   /* initialize the random number generator tausx */
-   /* tausx is taus2 with a Bays-Durham shuffle.   */
-   /************************************************/
-   rng = (gsl_rng *) gsl_rng_alloc(gsl_rng_tausx);
-   /* set the initial seed to 1 [the default] */
-   gsl_rng_set(rng,1);
+   printf("Generator       #Ticks\n");
    /* get #clock ticks since boot */
    begclk = times(&t);         /* starting time in ticks */
    i = SMPLS;                  /* number of samples */
@@ -55,24 +57,7 @@ int main(void)
       } /* for each iteration of get */
    endclk = times(&t);         /* ending time in ticks */
    duration = endclk - begclk;   /* calculate duration */
-   printf("tausx duration %10d\n", duration);
-   gsl_rng_free(rng);    /* de-allocate the RNG */
-   /************************************************/
-   /* initialize the random number generator taus2 */
-   /************************************************/
-   rng = (gsl_rng *) gsl_rng_alloc(gsl_rng_taus2);
-   /* set the initial seed to 1 [the default] */
-   gsl_rng_set(rng,1);
-   /* get #clock ticks since boot */
-   begclk = times(&t);         /* starting time in ticks */
-   i = SMPLS;                  /* number of samples */
-   while (i--)
-      {
-      x = gsl_rng_get(rng);
-      } /* for each iteration of get */
-   endclk = times(&t);         /* ending time in ticks */
-   duration = endclk - begclk;   /* calculate duration */
-   printf("taus2 duration %10d\n", duration);
+   printf("%s %15d\n", gsl_rng_name(rng), duration);
    gsl_rng_free(rng);    /* de-allocate the RNG */
    x = x;                /* to avoid a warning message */
    return(0);
